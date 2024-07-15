@@ -1,0 +1,44 @@
+# 多边形机器人配置端点，左上角开始
+footprint: [[0.175, 0.175], [0.175, -0.175], [-0.175, -0.175], [-0.175, 0.175]] # 圆形机器人配置半径 
+#robot_radius : 0.12
+
+# 0. 静态层
+static_layer:
+ enabled: true
+ map_topic: "/map"
+
+# 1. 障碍层
+obstacle_layer:
+ enabled: true # 是否启用
+ max_obstacle_height: 0.6 # 障碍物的最大高度(m)
+ min_obstacle_height: 0.0 # 障碍物的最小高度(m)
+ obstacle_range: 2.0 # 障碍物离机器人的最大距离
+ raytrace_range: 5.0 # 机器人移动过程中，代价地图动态更新障碍物的范围
+ inflation_radius: 0.10 # 障碍物膨胀半径，一般设为地盘直接大小
+ combination_method: 1 # 更改障碍层如何处理其外部层传入数据的行为
+ observation_sources: laser_scan_sensor # 障碍层传感器观测来源
+ track_unknown_space: true # 导航时是否允许通过地图中未知区域
+ origin_z: 0.0 # 地图Z轴原点
+ z_resolution: 0.1 # z分辨率
+ z_voxels: 10 # 垂直列的体素数，网格高度 = z_resolution * z_voxels
+ unknown_threshold: 15 # 未知单元的阈值
+ mark_threshold: 0 # 标记为空闲单元的阈值
+ publish_voxel_map: true # 是否发布
+ footprint_clearing_enabled: true # 机器人足迹是否清除
+ 
+# 申明一个雷达，供上文使用
+laser_scan_sensor:
+ data_type: LaserScan # 雷达数据类型
+ topic: /scan # 传感器数据话题名
+ marking: true # 是否允许此传感器在障碍物层创建障碍物
+ clearing: true # 是否允许此传感器在障碍物层消除障碍物
+ expected_update_rate: 0 # 期望传感器数据更新频率(s),0为两次读取有无限时间
+ min_obstacle_height: 0.00 # 传感器视为有效的最小障碍物高度(m)
+ max_obstacle_height: 0.30 # 传感器视为有效的最大障碍物高度(m),大于全局min_obstacle_height时无效，一般小于全局min_obstacle_height以过滤
+
+# 2. 膨胀层 
+inflation_layer:
+ enabled: true
+ cost_scaling_factor: 10.0  # exponential rate at which the obstacle cost drops off (default: 10)
+ inflation_radius: 0.10  # max. distance from an obstacle at which costs are incurred for planning paths.
+

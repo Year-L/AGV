@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/bibibaba/bibibaba/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/bibibaba/bibibaba/src/demo_py/include/**",
+        "/home/bibibaba/bibibaba/src/my_serial_node/include/**",
+        "/home/bibibaba/bibibaba/src/navigation/include/**",
+        "/home/bibibaba/bibibaba/src/robot_localization/include/**",
+        "/home/bibibaba/bibibaba/src/robot_pose_ekf-master/include/**",
+        "/home/bibibaba/bibibaba/src/robot_vision/include/**",
+        "/home/bibibaba/bibibaba/src/tf2_web_republisher/include/**",
+        "/home/bibibaba/bibibaba/src/waterplus_map_tools-master/include/**",
+        "/home/bibibaba/bibibaba/src/wpb_home/wpb_home_bringup/include/**",
+        "/home/bibibaba/bibibaba/src/wpb_home/wpb_home_tutorials/include/**",
+        "/home/bibibaba/bibibaba/src/wpb_home/wpbh_local_planner/include/**",
+        "/home/bibibaba/bibibaba/src/wpr_simulation/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

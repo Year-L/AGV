@@ -1,0 +1,24 @@
+非航点导航(指定坐标):
+roslaunch navigation navigation.launch
+普通巡航rosrun navigation navigation.py
+机械臂联动巡航rosrun navigation navigation2.py
+启动python文件后先设置当前位置，按0开启导航
+
+如何查看坐标:1.navigation.launch中更换地图1st_floor.yaml
+2.启动launch，设置当前位置，利用键盘控制到目标点，rviz中robotmodel查看当前坐标(小数点后有几位写几位)
+
+航点导航(标点位置):
+roslaunch navigation navigation.launch
+rosrun wpr_simulation demo_map_tools2.py
+
+设置航点:1.更换add_waypoint_simulation.launch地图 
+2.roslaunch waterplus_map_tools add_waypoint_simulation.launch
+3.rviz上方Add waypoint
+4.rosrun waterplus_map_tools wp_saver
+5.注意更改navigation.launch中waypoints.xml为waypoints1.xml
+
+修改串口的指令:
+查看串口硬件编码（idVendor）和产品编码（idProduct）：lsusb -vvv
+创建串口软链接：
+sudo chmod 0777 ~/bibibaba/src/change_the_port_name/*
+sudo sh ~/bibibaba/src/change_the_port_name/initenv.sh 	

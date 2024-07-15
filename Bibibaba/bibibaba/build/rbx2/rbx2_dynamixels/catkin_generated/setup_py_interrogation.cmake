@@ -1,0 +1,7 @@
+set(rbx2_dynamixels_SETUP_PY_SETUP_MODULE "distutils.core")
+set(rbx2_dynamixels_SETUP_PY_VERSION "0.1.0")
+set(rbx2_dynamixels_SETUP_PY_SCRIPTS "")
+set(rbx2_dynamixels_SETUP_PY_PACKAGES "rbx2_dynamixels")
+set(rbx2_dynamixels_SETUP_PY_PACKAGE_DIRS "src/rbx2_dynamixels")
+set(rbx2_dynamixels_SETUP_PY_MODULES "")
+set(rbx2_dynamixels_SETUP_PY_MODULE_DIRS "")

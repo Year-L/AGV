@@ -1,0 +1,8 @@
+robot_radius: 0.3 
+obstacle_range: 4 # 用于障碍物探测
+raytrace_range: 5 # 用于清除障碍物
+inflation_radius: 0.3 #膨胀半径
+cost_scaling_factor: 10.0 #代价比例系数
+map_type: costmap #地图类型
+observation_sources: scan #导航包所需要的传感器
+scan: { sensor_frame: laser,data_type: LaserScan, topic: scan, marking: true, clearing: true }

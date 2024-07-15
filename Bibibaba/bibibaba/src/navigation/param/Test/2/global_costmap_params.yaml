@@ -1,0 +1,141 @@
+# ns : global_costmap
+
+# The global frame for the costmap to operate in. (string, default: "/map")
+global_frame: map #（全局地图坐标名字：gmapping是不是会产生一个map坐标系及base_link到map的tf，估一般是map）
+
+# The name of the frame for the base link of the robot.(string, default: "base_link")
+robot_base_frame: base_footprint #（就是机器人基坐标）
+
+# distance a circular robot should be clear of the obstacle (kobuki: 0.18)
+# robot_radius: 0.20  (机器人应距离障碍物最小的距离，即安全边际28 38)
+footprint: [[0.14, 0.19], [0.14, -0.19], [-0.14, -0.19], [-0.14, 0.19]]  # if the robot is not circular
+ #（给出机器人的形状，假设机器人是个矩形，你要给出矩形四个角点的坐标，中心是base_link）
+# used for obstacle_layer, 3D->voxel 2D->other
+#map_type: costmap  #(使用代价地图进行计算路径)
+
+# Specifies the delay in transform (tf) data that is tolerable in seconds. This parameter serves as a safeguard to losing a link in the tf tree while still allowing an amount of latency the user is comfortable with to exist in the system. For example, a transform being 0.2 seconds out-of-date may be tolerable, but a transform being 8 seconds out of date is not. If the tf transform between the coordinate frames specified by the global_frame and robot_base_frame parameters is transform_tolerance seconds older than ros::Time::now(), then the navigation stack will stop the robot.(double, default: 0.2)
+transform_tolerance: 1.0  #（这个是为了时序同步，我们用ROStime进行同步，如果坐标变换转换太慢了，太晚到了，就把机器人停下来，这个不用太大，因为如果太晚才收到，去计算时就有延迟就会撞上，还不如晚到）
+
+# The frequency in Hz for the map to be updated.(double, default: 5.0)
+update_frequency: 10.0 #（地图更新频率）
+
+# The frequency in Hz for the map to be publish display information.(double, default: 0.0)
+publish_frequency: 1.0 #（地图发布频率，更新频率是开始计算时间，但计算完不一定就要发布，因为在计算之前还可能等其他数据，以及发送的时候为了同步，所以地图更新为1HZ，loam也是1HZ，如果这个值大于等于地图更新频率，那么地图必将更新失败，如果太接近就会产生错误的地图）
+
+# Whether or not to use a rolling window version of the costmap. If the static_map parameter is set to true, this parameter must be set to false. (bool, default: false)
+rolling_window: false #（这个很耗计算资源的，如果计算机很卡，建议false，这样不会一直更新地图，计算能力差的或者动态环境这样更新地图会不稳定）
+#static_map: true #（地图建好了就不变）
+
+# If true the full costmap is published to "~<name>/grid" every update. If false only the part of the costmap that has changed is published on the "~<name>/grid_updates" topic. (bool, default: false)
+always_send_full_costmap: false  #（局部更新就好了，如果全部的话，计算机带不动且地图不稳定）
+
+# Sequence of plugin specifications, one per layer. Each specification is a dictionary with name and type fields. The name is used to define the parameter namespace for the plugin.
+plugins:
+  - {name: static_layer,            type: "costmap_2d::StaticLayer"}
+  - {name: obstacle_layer,          type: "costmap_2d::ObstacleLayer"}
+  - {name: inflation_layer,         type: "costmap_2d::InflationLayer"}
+
+# The width of the map in meters.(int, default: 10)
+width: 30  #（地图多宽：指的是局部代价地图）
+
+# The height of the map in meters.(int, default: 10)
+height: 30 #（地图多长：指的是局部代价地图）
+
+# The resolution of the map in meters/cell. (double, default: 0.05)
+resolution: 0.05 #（地图分辨率）
+
+# The x origin of the map in the global frame in meters. (double, default: 0.0)
+origin_x: 0.0 #（地图原点的x）
+
+# The y origin of the map in the global frame in meters. (double, default: 0.0)
+origin_y: 0.0 #（地图原点的y）
+
+
+#############################
+#
+#        static_layer
+#
+#############################
+#（这个是对用mapserver导入的地图而言，当你用gmapping建完图后可用mapserver保存地图）
+static_layer:
+# The value for which a cost should be considered unknown when reading in a map from the map server. If the costmap is not tracking unknown space, costs of this value will be considered occupied. A value of zero also results in this parameter being unused. (int, default: -1)
+  unknown_cost_value: -1 #（比如有占用给了1，没占用给了0，未探测你给啥值？默认-1）
+
+# The threshold value at which to consider a cost lethal when reading in a map from the map server.(int, default: 100)
+  lethal_cost_threshold: 100 # (有害的cost是啥值，比如障碍物)
+
+# The topic that the costmap subscribes to for the static map. This parameter is useful when you have multiple costmap instances within a single node that you want to use different static maps. (string, default: "map")
+  map_topic: map # (全局地图坐标系叫啥名字)
+
+# Only subscribe to the first message on the map topic, ignoring all subsequent messages (bool, default: false)
+  first_map_only: false # (只考虑第一个地图数据？肯定不是，我们还要更新)
+
+# In addition to map_topic, also subscribe to map_topic + "_updates" (bool, default: false)
+  subscribe_to_updates: false  #(还订阅maptopic 的其他update，这个可以结合机器视觉深度学习来使用，具体在后面说)
+
+# If true, unknown values in the map messages are translated directly to the layer. Otherwise, unknown values in the map message are translated as FREE_SPACE in the layer.  (bool, default: true)
+  track_unknown_space: true # (你看，我们在rviz发一个坐标给为探测区域也能导航，为什么，就是这个)
+
+# Only matters if the static layer is not the bottom layer. If true, only the maximum value will be written to the master costmap. (bool, default: false)
+  use_maximum: false # (false就是代价地图地图所有情况都更新，true就是指更新障碍物)
+
+# If true, translates all map message values to NO_INFORMATION/FREE_SPACE/LETHAL_OBSTACLE (three values). If false, a full spectrum of intermediate values is possible. (bool, default: true)
+  trinary_costmap: true # (三重costmap，说白了，打开rviz，有三种地图看到没，如果true就产生那三种地图，false就一种)
+
+#############################
+#
+#        inflation_layer
+#
+#############################
+inflation_layer:
+# The radius in meters to which the map inflates obstacle cost values. (double, default: 0.55)
+  inflation_radius: 0.10  #（比如障碍物半径是1，为了不装上去，我把障碍物半径考虑成1.1，这时这个值就是0.1）
+
+# A scaling factor to apply to cost values during inflation. The cost function is computed as follows for all cells in the costmap further than the inscribed radius distance and closer than the inflation radius distance away from an actual obstacle: exp(-1.0 * cost_scaling_factor * (distance_from_obstacle - inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE - 1), where costmap_2d::INSCRIBED_INFLATED_OBSTACLE is currently 254. NOTE: since the cost_scaling_factor is multiplied by a negative in the formula, increasing the factor will decrease the resulting cost values. (double, default: 10.0)
+  cost_scaling_factor: 10.0  #（cost缩放，如迪杰斯特拉的cost，如果值太大，那么它容易陷入局部极小值，太小的话容易计算太久）
+
+#############################
+#
+#      obstacle_layer
+#
+#############################
+obstacle_layer:
+# The maximum height of any obstacle to be inserted into the costmap in meters. This parameter should be set to be slightly higher than the height of your robot. (double, default: 2.0)
+  max_obstacle_height: 2.0 # (最多考虑多高的障碍物？比你机器人高些就好了)
+# The default maximum distance from the robot at which an obstacle will be inserted into the cost map in meters. This can be over-ridden on a per-sensor basis. (double, default: 2.5)
+  obstacle_range: 3.0  #（考虑多远的障碍物？激光雷达比较远就考虑远些，不过计算机会吃不消，建议适中，机器人如果运动很快，这个要设大些）
+# The default range in meters at which to raytrace out obstacles from the map using sensor data. This can be over-ridden on a per-sensor basis. (double, default: 3.0)
+  raytrace_range: 4.0  #（障碍物追踪范围，略大于上面那个就好）
+# If false, each pixel has one of 2 states: lethal obstacle or free. If true, each pixel has one of 3 states: lethal obstacle, free, or unknown.  (bool, default: false)
+  track_unknown_space: false #（地图属性，如果是true，那么地图有障碍物，未探测，无障碍物三种，如果false就2种）
+# If true, the robot footprint will clear (mark as free) the space in which it travels. (bool, default: true)
+  footprint_clearing_enabled: true  #(机器人移动那么清空那个栅格，无人驾驶汽车在公路上建议为false)
+# A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below. (string, default: "")
+  observation_sources: scan #（激光雷达发布的话题名）
+  
+  scan:
+# The topic on which sensor data comes in for this source. Defaults to the name of the source. (string, default: source_name)
+    topic: scan  #（激光雷达发布的话题名）
+# The frame of the origin of the sensor. Leave empty to attempt to read the frame from sensor data. The frame can be read from both sensor_msgs/LaserScan, sensor_msgs/PointCloud, and sensor_msgs/PointCloud2 messages. (string, default: "")
+    sensor_frame: ""  #(若空就是直接scan，如果有其他坐标系并有tf的话可以其他)
+# How long to keep each sensor reading in seconds. A value of 0.0 will only keep the most recent reading. (double, default: 0.0)
+    observation_persistence: 0.0 #(激光点云保持时间，建议为0)
+# How often to expect a reading from a sensor in seconds. A value of 0.0 will allow infinite time between readings. This parameter is used as a failsafe to keep the navigation stack from commanding the robot when a sensor has failed. It should be set to a value that is slightly more permissive than the actual rate of the sensor. For example, if we expect a scan from a laser every 0.05 seconds we might set this parameter to be 0.1 seconds to give a generous buffer and account for some amount of system latency. (double, default: 0.0)
+    expected_update_rate: 0.0 #(多久从激光雷达读数是允许的，0就可以了，发过来我就收)
+# The data type associated with the topic, right now only "PointCloud", "PointCloud2", and "LaserScan" are supported. (string, default: "PointCloud")
+    data_type: LaserScan #（数据格式名）
+# Whether or not this observation should be used to clear out freespace.  (bool, default: false)
+    clearing: true #（是否要用于清除空闲，肯定true啊）
+# Whether or not this observation should be used to mark obstacles. (bool, default: true)
+    marking: true #(激光雷达数据是否要用于标记障碍物，肯定true啊)
+# The maximum height in meters of a sensor  reading considered valid. This is usually set to be slightly higher than the height of the robot. Setting this parameter to a value greater than the global max_obstacle_height parameter has no effect. Setting this parameter to a value less than the global max_obstacle_height will filter out points from this sensor above that height.(double, default: 2.0)
+    max_obstacle_height: 2.0  #(最多考虑多高的障碍物？比你机器人高些就好了)
+# The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor. (double, default: 0.0)
+    min_obstacle_height: 0.0  #(最多考虑多低的障碍物？地面就可以，除非3D)
+# The maximum range in meters at which to insert obstacles into the costmap using sensor data.  (double, default: 2.5)
+    obstacle_range: 3.0 #(把半径为多少的障碍物纳入代价地图？)
+# The maximum range in meters at which to raytrace out obstacles from the map using sensor data.  (double, default: 3.0)
+    raytrace_range: 4.0 # (对半径多少内的障碍物进行跟中)
+# Allows for Inf values in "LaserScan" observation messages. The Inf values are converted to the laser maximum range.  (bool, default: false)
+    inf_is_valid: true  #(允许laserscan的inf数据，这个表示了激光雷达的能力，所以true)
+

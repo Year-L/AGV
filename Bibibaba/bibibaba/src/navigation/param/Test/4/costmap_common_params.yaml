@@ -1,0 +1,15 @@
+obstacle_range: 3.0
+raytrace_range: 3.5
+
+footprint: [[0.175, 0.175], [0.175, -0.175], [-0.175, -0.175], [-0.175, 0.175]]
+#robot_radius: 0.17
+
+inflation_radius: 0.10
+cost_scaling_factor: 3.0
+max_obstacle_height: 2.0  #(最多考虑多高的障碍物？比你机器人高些就好了)
+# The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor. (double, default: 0.0)
+min_obstacle_height: 0.0  #(最多考虑多低的障碍物？地面就可以，除非3D)
+# The maximum range in meters at which to insert obstacles into the costmap using sensor data.  (double, default: 2.5)
+map_type: costmap
+observation_sources: scan
+scan: {sensor_frame: base_scan, data_type: LaserScan, topic: scan, marking: true, clearing: true}

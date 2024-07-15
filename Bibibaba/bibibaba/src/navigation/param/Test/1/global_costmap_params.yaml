@@ -1,0 +1,17 @@
+global_costmap:
+ global_frame: map # 参考系
+ robot_base_frame: base_footprint # 参考系
+ update_frequency: 10.0 # 全局代价地图更新频率(Hz)
+ publish_frequency: 10.0 # 全局代价地图发布频率(Hz)
+#static_map: true # 是否由mapserver提供的地图服务进行代价地图的初始化
+ rolling_window: false # 机器人移动时，保持机器人在代价地图的中心
+ resolution: 0.05 # 代价地图的分辨率
+ transform_tolerance: 3.0 # 获取TF的超时时间(s)
+#map_type: costmap # 声明global_costmap的地图类型
+# 制作代价地图时，所插入的costmap插件
+ plugins:
+ - {name: static_layer,       type: "costmap_2d::StaticLayer"}
+ - {name: inflation_layer,    type: "costmap_2d::InflationLayer"}
+# 是否允许全局规划器在未知区域通行
+GlobalPlanner:        
+ allow_unknown: true

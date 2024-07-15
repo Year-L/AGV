@@ -1,0 +1,40 @@
+显示串口命令：ls -l /dev |grep ttyUSB
+查看TF树:rosrun rqt_tf_tree rqt_tf_tree 
+rosrun tf2_tools view_frames.py 
+查看节点图:rqt_graph
+查看串口硬件编码（idVendor）和产品编码（idProduct）：lsusb -vvv
+创建串口软链接：
+sudo chmod 0777 ~/bibibaba/src/change_the_port_name/*
+sudo sh ~/bibibaba/src/change_the_port_name/initenv.sh 
+串口通信（my_serial_node）:
+roslaunch my_serial_node Run_car.launch
+roslaunch my_serial_node my_serial_node.launch
+键盘控制：
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+雷达运行：
+建图:roslaunch navigation Run_gmapping.launch
+roslaunch navigation hector_slam.launch
+导航:roslaunch navigation nav_bringup.launch
+roslaunch navigation navigation_laser.launch
+move_base配置4、3最好 old(X) 1(不太行，周围稍微有障碍就不动) 2(X) 3(效果还行，但需要调参数) 4(挺好的，一些速度参数、目标误差参数可以调整) 5(无法使用)
+rosrun navigation station_navigation.py
+rosrun navigation mission_calc.py
+rosrun navigation PSO_for_singleAGV.py
+rosrun navigation station_navigation_laboratory.py
+rosrun navigation navigation.py
+
+rosrun navigation WayPoints_Navigation.py
+
+动态调整dwa参数:rosrun rqt_reconfigure rqt_reconfigure 
+ 
+惯导运行：
+1.启动imu组件
+roslaunch wit_ros_imu wit_imu.launch
+2.查看输出信息
+rostopic echo /imu
+rostopic echo /mag
+
+roslaunch rosbridge_server rosbridge_websocket.launch
+rosrun tf2_web_republisher tf2_web_republisher
+node server.js

@@ -1,0 +1,58 @@
+# ros wiki for teb ： http://wiki.ros.org/teb_local_planner
+# 参数：https://charon-cheung.github.io/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/#%E8%AF%9D%E9%A2%98
+TebLocalPlannerROS:
+ odom_topic: odom_combined # 里程计坐标系
+ map_frame: odom_combined # 所使用的地图参考系,???
+# Trajectory params
+ teb_autosize: True # 优化期间允许改变轨迹的时域长度
+ dt_ref: 0.45
+ dt_hysteresis: 0.1
+ min_samples: 4
+ max_samples: 500
+ force_reinit_new_goal_dist: 1.0
+ global_plan_overwrite_orientation: True
+ global_plan_viapoint_sep: -0.1
+ max_global_plan_lookahead_dist: 3.0
+ force_reinit_new_goal_dist: 1.0
+ feasibility_check_no_poses: 5
+ publish_feedback: false
+ shrink_horizon_backup: true
+ allow_init_with_backwards_motion: true
+ exact_arc_length: false
+# Obstacles
+ min_obstacle_dist: 0.13
+ include_costmap_obstacles: True
+ costmap_obstacles_behind_robot_dist: 1.0
+ obstacle_poses_affected: 7
+ costmap_converter_plugin: ""
+ costmap_converter_spin_thread: True
+ costmap_converter_rate: 5
+# Optimization
+ no_inner_iterations: 5
+ no_outer_iterations: 4
+ optimization_activate: True
+ optimization_verbose: False
+ penalty_epsilon: 0.1
+ weight_max_vel_x: 1
+ weight_max_vel_theta: 1
+ weight_acc_lim_x: 1
+ weight_acc_lim_theta: 1
+ weight_kinematics_nh: 1000
+ weight_kinematics_forward_drive: 60
+ weight_kinematics_turning_radius: 1
+ weight_optimaltime: 1
+ weight_obstacle: 50
+ weight_dynamic_obstacle: 10 # not in use yet
+ selection_alternative_time_cost: False # not in use yet
+# Homotopy Class Planner
+ enable_homotopy_class_planning: False
+ enable_multithreading: True
+ simple_exploration: False
+ max_number_classes: 4
+ roadmap_graph_no_samples: 15
+ roadmap_graph_area_width: 5
+ h_signature_prescaler: 0.5
+ h_signature_threshold: 0.1
+ obstacle_keypoint_offset: 0.1
+ obstacle_heading_threshold: 0.45
+ visualize_hc_graph: False

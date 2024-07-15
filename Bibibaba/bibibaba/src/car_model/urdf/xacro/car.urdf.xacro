@@ -1,0 +1,27 @@
+<!-- 组合小车模型与摄像头与雷达 -->
+<robot name="mycar" xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:include filename="head.xacro" />
+    <xacro:include filename="car_model.urdf.xacro" />
+    <xacro:include filename="my_camera.urdf.xacro" />
+    <xacro:include filename="my_laser.urdf.xacro" />
+    <xacro:include filename="move.urdf.xacro" />
+
+     <xacro:include filename="my_sensors_laser.urdf.xacro" />
+      <xacro:include filename="my_sensors_camera.urdf.xacro" />
+      <xacro:include filename="my_sensors_kinect.urdf.xacro" />
+        <!-- Fake localization plugin -->
+ <gazebo>
+    <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>base_pose_ground_truth</topicName>
+      <gaussianNoise>0.01</gaussianNoise>
+      <frameName>world</frameName>-->
+        <!-- initialize odometry for fake localization-->
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+    </plugin>
+</gazebo>
+</robot>
+

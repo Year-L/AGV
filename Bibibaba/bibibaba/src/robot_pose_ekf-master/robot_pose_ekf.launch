@@ -1,0 +1,26 @@
+<launch>
+
+<node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+  <param name="output_frame" value="odom_combined"/>
+  <param name="base_footprint_frame" value="base_footprint"/>
+  <param name="freq" value="30.0"/>
+  <!-- freq: 滤波器更新和发布频率，注意：频率高仅仅意味着一段时间可以获得更多机器人位姿信息，但是并不表示可以提高每次位姿评估的精度 -->
+  <param name="sensor_timeout" value="1.0"/>  
+  <!-- sensor_timeout: 当某传感器停止给滤波器发送信息时，滤波器应该等多长时间方才可以在没有该传感器信息状况下继续工作 -->
+  <!-- 下面定义输入的源，如果需要输入其他传感器的，则对应的地方修改即可 -->
+  <param name="odom_used" value="true"/>
+  <param name="imu_used" value="true"/>
+  <param name="vo_used" value="false"/>
+
+  <!-- <remap from="odom" to="wheel_odom" /> -->
+  <remap from="imu_data" to="imu" />
+  <remap from="odom" to="odom_combined" />
+</node>
+
+<node pkg="robot_pose_ekf" type="odom_ekf.py" name="odom_ekf" output="screen">
+   	<remap from="input" to="/robot_pose_ekf/odom_combined"/>
+   	<remap from="output" to="/odom_ekf"/>
+</node>
+
+</launch>
+

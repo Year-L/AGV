@@ -1,0 +1,2 @@
+car_model:demo_py:my_serial_node:navigation:robot_localization:robot_pose_ekf-master:robot_vision:teb_navigation_course_solutions/teb_navigation:tf2_web_republisher:waterplus_map_tools:wpb_home/wpb_home_behaviors:wpb_home/wpb_home_bringup:wpb_home/wpb_home_python:wpb_home/wpb_home_python3:wpb_home/wpb_home_remote:wpb_home/wpb_home_tutorials:wpb_home/wpbh_local_planner:wpr_simulation:ydlidar_ros_driver
+-DCATKIN_DEVEL_PREFIX=/home/bibibaba/bibibaba/devel -DCMAKE_INSTALL_PREFIX=/home/bibibaba/bibibaba/install -G Unix Makefiles

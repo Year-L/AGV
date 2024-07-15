@@ -1,0 +1,5 @@
+<launch>
+    <!-- 启动激光雷达跟随节点 -->
+    <!-- Activate lidar follow node -->
+    <node name='laser_Tracker' pkg="navigation" type="laser_Tracker.py" required="true" output="screen"/>
+</launch>

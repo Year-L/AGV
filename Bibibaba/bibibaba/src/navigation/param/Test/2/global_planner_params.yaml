@@ -1,0 +1,23 @@
+# ns : GlobalPlanner
+
+# Specifies whether or not to allow the planner to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which planner will then happily go right through). (bool, default: true)
+allow_unknown: true #（就是在rviz能不能向未探测区域发goal）
+
+# A tolerance on the goal point for the planner. The planner will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away. (double, default: 0.0)
+default_tolerance: 0.0 #（比方说你给rviz一个goal，如果那个点不太好到达，能不能让你到离这个点比较近的点，如果是精确到达的话，0）
+
+# Specifies whether or not to visualize the potential area computed via a PointCloud2. (bool, default: false)
+visualize_potential: false
+#（是否显示潜在区域通过激光雷达点的计算过程，没用，直接false）
+# If true, use dijkstra's algorithm. Otherwise, A*. (bool, default: true)
+use_dijkstra: true
+#（全局路径规划算法是用迪杰斯特拉还是A*，true就是dijkstra）
+# If true, use the quadratic approximation of the potential. Otherwise, use a simpler calculation. (bool, default: true)
+use_quadratic: true
+#（使用二次逼近与否，如果用的话，能够计算更快）
+# If true, create a path that follows the grid boundaries. Otherwise, use a gradient descent method. (bool, default: false)
+use_grid_path: false
+#（使用栅格路径？使用的话计算速度会快些，但不精确）
+# If for some reason, you want global_planner to exactly mirror the behavior of navfn, set this to true (and use the defaults for the other boolean parameters) (bool, default: false)
+old_navfn_behavior: false #（如果你希望全局规划器准确地反应导航雷达的行为，就true，）
+

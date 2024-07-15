@@ -1,0 +1,17 @@
+导航方面:
+	显示串口: ls -l /dev |grep ttyUSB
+	串口通信: roslaunch my_serial_node Run_car.launch
+	导航配置: roslaunch navigation navigation.launch
+	航点导航: rosrun navigation WayPoints_Navigation.py
+	键盘控制: rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+	
+web与ros连接:
+		      roslaunch rosbridge_server rosbridge_websocket.launch
+	坐标变换：rosrun tf2_web_republisher tf2_web_republisher
+	视频流：rosrun web_video_server web_video_server
+		      web_rviz:node server.js
+机器视觉：
+	颜色识别： roslaunch robot_vision color_detection.launch 
+	缺陷检测：roslaunch robot_vision defection.launch 
+	
+	

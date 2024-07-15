@@ -1,0 +1,39 @@
+base_global_planner: "global_planner/GlobalPlanner"
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+recovery_behaviors:
+  - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery} 
+  - {name: rotate_recovery, type: rotate_recovery/RotateRecovery} 
+  - {name: aggressive_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+
+# The rate in Hz at which to run the global planning loop. If the frequency is set to 0.0, the global planner will only run when a new goal is received or the local planner reports that its path is blocked.(double, default: 0.0)
+planner_frequency: 2.0 #（全局规划路径产生频率，如果为0就是给一个goal之后，全局规划路径不变更，这个不用设置太高，不然太耗资源）
+
+# The rate in Hz at which to run the control loop and send velocity commands to the base.(double, default: 20.0)
+controller_frequency: 10.0 #（就是局部规划器cmd_vel发送的频率，发这个让底盘节点响应，发消息给编码器，从而控制小车速度，这个变的时候要把PID的频率也改变，如果pid的代码不同时刻控制速度是分开存储的就不用，这个也别太快，不然机器响应不了，你只能去调PID参数了，主要是D）
+# How long the planner will wait in seconds in an attempt to find a valid plan before space-clearing operations are performed.(double, default: 5.0)
+planner_patience: 5.0 #(允许全局规划器计算多少时间，超过这个时间就会显示无法找到路径，如果这个太大，ros可能时序错乱，所以请用速度更快的计算机且不要设太大，或者单独用FPGA处理这个运算)
+# How long the controller will wait in seconds without receiving a valid control before space-clearing operations are performed.(double, default: 15.0)
+controller_patience: 3.0 #（就是允许局部路径计算时间是多少，超过时间还算不出来这个小车就停下来了，在反应要求这个值比较小，不要太大不然会撞上，这个超过全局路径规划的频率以全局路径规划频率为准，最好的办法是换好的计算机，或者单独用FPGA处理这个运算）
+# Whether or not to enable the move_base recovery behaviors to attempt to clear out space.(bool, default: true)
+recovery_behavior_enabled: true  #（与前面的对应，让机器人能够清空路径吗，这个设置true可以增加机器人安全性）
+# Determines whether or not the robot will attempt an in-place rotation when attempting to clear out space. Note: This parameter is only used when the default recovery behaviors are in use, meaning the user has not set the recovery_behaviors parameter to anything custom.(bool, default: true)
+clearing_rotation_allowed: false #（强烈建议fasle，不然容易打转，超烦）
+# Determines whether or not to shutdown the costmaps of the node when move_base is in an inactive state (bool, default: false)
+shutdown_costmaps: false #（是否在movebase未激活的时候关闭代价地图，这个其实movebase断了都不能动了，还说啥，无所谓，但是如果是movebase经常卡死又恢复这种建议开启。但是这样导航也将悲剧，所以好好优化时序吧）
+# How long in seconds to allow for oscillation before executing recovery behaviors. A value of 0.0 corresponds to an infinite timeout. (double, default: 0.0)
+oscillation_timeout: 5.0 #（恢复前允许震荡多少秒，为了得到比较好的位姿重估计，这是必要的，但不要太大，不然机器人就成傻子了）
+# How far in meters the robot must move to be considered not to be oscillating. Moving this far resets the timer counting up to the ~oscillation_timeout (double, default: 0.5)
+oscillation_distance: 0.3 #（机器人必须移动多远才能被认为是不振荡的，这个根据你的激光雷达范围设置，激光雷达范围越大，这个值就可以越大，建议设略小于default，但不能太小）
+# How many times to allow for planning retries before executing recovery behaviors. A value of -1.0 corresponds to an infinite retries.(int32_t, default: -1)
+#max_planning_retries: -1（全局规划器如果找不到路，多久允许恢复？-1就是一直允许，与上面的呼应，建议-1，请通过算法优化位姿，而不是恢复行为。）
+#############################
+# plug for recovery_behaviors
+#############################
+conservative_reset:
+# The radius away from the robot in meters outside which obstacles will be removed from the costmaps when they are reverted to the static map.
+    reset_distance: 1.0 #（比如原本建的全局地图处有个地方他有障碍物，但是等我机器人到障碍物附近（距离小于某个值）时却发现没有，那我可以把它从全局地图移除，这个距离是多少，如果你的计算机比较卡或者机器人运动速度比较快，建议大一些，但是若是周围人很多，建议设小些，这样不会找不到路径。这里这个是保守设置，1米，下面那个是比较激进的，只要不对就更新，估为0米
+
+aggressive_reset:
+# The radius away from the robot in meters outside which obstacles will be removed from the costmaps when they are reverted to the static map.
+    reset_distance: 0.0 #（同上面，激进设置）
+

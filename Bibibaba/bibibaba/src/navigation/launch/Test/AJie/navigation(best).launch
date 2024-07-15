@@ -1,0 +1,24 @@
+<launch>
+    <param name="use_sim_time" value="false" />
+    <include file="$(find navigation)/launch/1/agv_config.launch" />
+    
+    <!-- Run move_base -->
+    <include file="$(find navigation)/launch/2/move_base.launch" />
+
+    <!-- Run map server -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find navigation)/map/1st_floor.yaml"/>
+
+    <!-- Run AMCL -->
+    <include file="$(find navigation)/launch/2/amcl.launch" />
+
+    <!-- Run rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation)/rviz/nav.rviz"/>
+    
+    <!-- Map tools  -->
+    <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen">
+      <param name="load" type="string" value="/home/bibibaba/waypoints14.xml"/> 
+    </node>
+  
+    <!-- WP_navi_server  -->
+    <node pkg="waterplus_map_tools" type="wp_navi_server" name="wp_navi_server" output="screen"/>
+</launch>

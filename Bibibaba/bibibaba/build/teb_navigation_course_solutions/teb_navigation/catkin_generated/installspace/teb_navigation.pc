@@ -1,0 +1,8 @@
+prefix=/home/bibibaba/bibibaba/install
+
+Name: teb_navigation
+Description: Description of teb_navigation
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/bibibaba/bibibaba/devel
+
+Name: navigation
+Description: Description of navigation
+Version: 0.0.0
+Cflags: -I/home/bibibaba/bibibaba/devel/include
+Libs: -L${prefix}/lib 
+Requires: roscpp rospy std_msgs

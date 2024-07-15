@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<launch>
+    <master auto="start"/>
+
+    <!-- TF setting 
+    <include file="$(find art_racecar)/launch/includes/art_car_tf.launch.xml" />-->
+
+    <!-- SENSOR DEVICE -->
+    <!-- IMU -->
+    <include file="$(find wit_ros_imu)/launch/wit_imu.launch"></include>
+    <!-- Car -->
+    <node pkg="my_serial_node" type="my_serial_node" name="my_serial_node" output="screen" />
+    <node pkg="my_serial_node" type="gravity" name="gravity" output="screen" />
+
+	
+      <!-- Rviz -->
+    <!--node pkg="rviz" type="rviz" name="rviz" args="-d $(find art_racecar)/launch/rviz/gmapping.rviz" if="$(arg use_rviz)"/-->
+
+</launch>

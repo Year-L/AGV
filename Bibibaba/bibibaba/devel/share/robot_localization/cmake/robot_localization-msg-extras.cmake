@@ -1,0 +1,2 @@
+set(robot_localization_MESSAGE_FILES "")
+set(robot_localization_SERVICE_FILES "/home/bibibaba/bibibaba/src/robot_localization/srv/GetState.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/SetDatum.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/SetPose.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/SetUTMZone.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/ToggleFilterProcessing.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/FromLL.srv;/home/bibibaba/bibibaba/src/robot_localization/srv/ToLL.srv")

@@ -1,0 +1,164 @@
+# ns : DWAPlannerROS
+
+##################################
+#
+#  Robot Configuration Parameters
+#
+##################################
+
+# The x acceleration limit of the robot in meters/sec^2 (double, default: 2.5)
+acc_lim_x: 1.0 #（x方向最大加速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The y acceleration limit of the robot in meters/sec^2 (double, default: 2.5)
+acc_lim_y: 0.0 #（y方向最大加速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The rotational acceleration limit of the robot in radians/sec^2 (double, default: 3.2)
+acc_lim_theta: 5.0 #（x方向最大角加速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The absolute value of the maximum translational velocity for the robot in m/s (double, default: 0.55)
+max_vel_trans: 0.2 #（最大平移速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The absolute value of the minimum translational velocity for the robot in m/s (double, default: 0.1)
+min_vel_trans: 0.1 #（最小平移速度，速度太小了，VO，imu这些东西容易漂移）
+
+# The maximum x velocity for the robot in m/s. (double, default: 0.55)
+max_vel_x: 0.3 #（最大x方向速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The minimum x velocity for the robot in m/s, negative for backwards motion. (double, default: 0.0)
+min_vel_x: -0.2 #（最小x方向速度，太小了，VO，imu这些东西容易漂移）
+
+# The maximum y velocity for the robot in m/s (double, default: 0.1)
+max_vel_y: 0.0 #（最大y方向速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The minimum y velocity for the robot in m/s (double, default: -0.1)
+min_vel_y: 0.0 #（最小y方向速度，太小了，VO，imu这些东西容易漂移）
+
+# The absolute value of the maximum rotational velocity for the robot in rad/s (double, default: 1.0)
+max_vel_theta: 0.5  #(最大角速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+# The absolute value of the minimum rotational velocity for the robot in rad/s (double, default: 0.4)
+min_vel_theta: 0.1 # (最小角速度，速度大了，定位会不准确，所以在保证性能下尽量小）
+
+theta_stopped_vel: 0.2 #（刹车角速度）
+trans_stopped_vel: 0.1 #（刹车线速度）
+##################################
+#
+#  Goal Tolerance Parameters
+#
+##################################
+
+# The tolerance in radians for the controller in yaw/rotation when achieving its goal (double, default: 0.05)
+yaw_goal_tolerance: 0.3 #（控制器达到目标的旋转差允许，太小了，机器人会不断调整，从而无法停下）
+
+# The tolerance in meters for the controller in the x & y distance when achieving a goal (double, default: 0.10)
+xy_goal_tolerance: 0.2 #（控制器达到目标的位移差允许，太小了，机器人会不断调整，从而无法停下）
+
+# If goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so. (bool, default: false)
+latch_xy_goal_tolerance: false #（如果是true机器人在调整时不会转圈，如果是false就会转圈，建议true，并把前面两个值调大些）
+
+##################################
+#
+#  Forward Simulation Parameters
+#
+##################################
+
+# The amount of time to forward-simulate trajectories in seconds (double, default: 1.7)
+sim_time: 1.0 #（dwa算法不是给位姿一个增量吗，这个增量是由小车的速度及时间间隔时间决定的，这个值越大，计算速度越慢，模拟的路线越长）
+
+# The step size, in meters, to take between points on a given trajectory (double, default: 0.025)
+sim_granularity: 0.03  #（仿真线间隔尺寸，同决定了仿真的路线长度及计算速度，越大越长）
+angular_sim_granularity: 0.1 #（仿真角度间隔尺寸，同决定了仿真的路线长度及计算速度，越大越宽）
+
+# The number of samples to use when exploring the x velocity space (integer, default: 3)
+vx_samples: 5 #（对x速度进行采样的粒子数，越大避障效果越好，但计算越慢）
+
+# The number of samples to use when exploring the y velocity space (integer, default: 10)
+vy_samples: 1 #（对y速度进行采样的粒子数，越大避障效果越好，但计算越慢）
+
+# The number of samples to use when exploring the theta velocity space (integer, default: 20)
+vtheta_samples: 6 #（对角速度进行采样的粒子数，越大避障效果越好，但计算越慢）
+
+# The frequency at which this controller will be called in Hz. Uses searchParam to read the parameter from parent namespaces if not set in the namespace of the controller. For use with move_base, this means that you only need to set its "controller_frequency" parameter and can safely leave this one unset. (double, default: 20.0)
+#controller_frequency: 20 （cmd_vel频率，这个global说过）
+
+##################################
+#
+#   Trajectory Scoring Parameters
+#
+# cost =  pdist_scale * (distance to path from the endpoint of the trajectory in map cells or meters depending on the meter_scoring parameter) 
+#  +      gdist_scale * (distance to local goal from the endpoint of the trajectory in map cells or meters depending on the meter_scoring parameter) 
+#  +      occdist_scale * (maximum obstacle cost along the trajectory in obstacle cost (0-254))
+#
+##################################
+#（以上就是dwa的公式了）
+# The weighting for how much the controller should stay close to the path it was given (double, default: 32.0)
+path_distance_bias: 64.0  #(控制器应保持在给定全局路线的权重)
+
+# The weighting for how much the controller should attempt to reach its local goal, also controls speed (double, default: 24.0)
+goal_distance_bias: 24.0 #（控制器达到本地给定目标的权重，注：dwa就是在尽可能接近globalplan下又符合局部代价和安全）
+
+# The weighting for how much the controller should attempt to avoid obstacles (double, default: 0.01)
+occdist_scale: 0.5 #（尝试避免障碍物权重，即为了避障的安全考虑）
+
+# The distance from the center point of the robot to place an additional scoring point, in meters (double, default: 0.325)
+forward_point_distance: 0.2 #（前放点距离，越大越安全，但太大可能找不到路径）
+
+# The amount of time that the robot must stop before a collision in order for a trajectory to be considered valid in seconds (double, default: 0.2)
+stop_time_buffer: 0.2 #（机器人在碰撞前必须停止的时间，模拟轨迹如果撞上了，肯定不好，这个是为了安全，越大越安全）
+
+# The absolute value of the velocity at which to start scaling the robot's footprint, in m/s (double, default: 0.25)
+scaling_speed: 0.25 #（缩放机器人的速度，也是为了安全，越大越安全，但太大可能找不到路径）
+
+# The maximum factor to scale the robot's footprint by (double, default: 0.2)
+max_scaling_factor: 0.2 #（同上面，最大缩放因子）
+
+#################################
+#
+# RotateFirtCostFunction
+#
+#################################
+
+# mininum angle robot to path and maximux distance from robot to path begin to make the function work（旋转机器人为找到路径）
+angle_threshold: 2.0 #（机器人到路径最小转角）
+dist_threshold: 0.2 #（机器人到路径偏离最大距离）
+
+# maximum x direction velocity, this function mainly for rotate robot to path direction, so we have to limit x velocity
+max_xv: 0.07 #（最大X的直接速度，用于旋转机器人找到路径方向，之前我们有个参数，我是不喜欢旋转）
+
+# cost factor for score, the higher it is, the bigger effect it has
+cost_factor: 10.0 #（见dwa公式）
+
+# little bias to defend zero overflow
+thetav_bias: 0.2 #（这个小偏差是为了防止0溢出，在计算上）
+
+##################################
+#
+#  Oscillation Prevention Parameters
+#
+##################################
+
+# How far the robot must travel in meters before oscillation flags are reset (double, default: 0.05)
+oscillation_reset_dist: 0.05 #（在重置振荡标志之前，机器人必须以米为单位移动多远，不能太大，不然机器人容易失控）
+
+
+##################################
+#
+#      Global Plan Parameters
+#
+##################################
+
+# Defines whether or not to eat up the plan as the robot moves along the path. If set to true, points will fall off the end of the plan once the robot moves 1 meter past them. (bool, default: true)
+prune_plan: true #（是否自动调整计划，如果是true偏离1米就调整，true就好）
+
+##################################
+#
+# Rivz Display Parameters for Debug
+#
+##################################
+
+# publish dwa cost grid point cloud
+publish_cost_grid_pc: true  # （rviz里是否发布这种点云）
+
+# publish dwa trajectory point cloud
+publish_traj_pc: true #（rviz里是否发布这种轨迹的点云）
+

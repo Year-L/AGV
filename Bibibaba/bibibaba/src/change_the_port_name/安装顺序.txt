@@ -1,0 +1,3 @@
+先接雷达，对应端口ttyUSB0
+再接USB-UART，对应端口ttyUSB1
+再接惯导，对应端口ttyUSB2

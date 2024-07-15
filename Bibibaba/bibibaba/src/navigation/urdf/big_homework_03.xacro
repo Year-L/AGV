@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot name="demo02" xmlns:xacro="http://ros.org/wiki/xacro">
+	<xacro:include filename="head.xacro" />
+	
+	<xacro:include filename="base_gazebo.xacro" />
+	<xacro:include filename="my_camera.urdf.xacro" />
+	
+	<xacro:include filename="07_move.xacro" />
+	
+</robot>
